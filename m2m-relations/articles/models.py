@@ -14,3 +14,20 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
+
+class Tag(models.Model):
+
+    name = models.CharField(max_length=16)
+    articles = models.ManyToManyField(Article, related_name='tags', through='TagsArticles')
+
+    def __str__(self):
+        return self.name
+
+class TagsArticles(models.Model):
+
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    is_main = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['-is_main']
